@@ -1,0 +1,111 @@
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>InStorage - Files</title>
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+        
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <div class="container-fluid">
+              <a class="navbar-brand">InStorage</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/upload">Upload</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/files">Files</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/sharing">Sharing</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/deleted_items">Deleted</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+        
+
+          <h2>Image Gallery</h2>
+          <div id="image-gallery"></div>
+
+          <script>
+            let selectedImages = new Set();
+          
+            fetch('/images-list')
+              .then(res => res.json())
+              .then(images => {
+                const container = document.getElementById('image-gallery');
+                
+                images.forEach(img => {
+                  const wrapper = document.createElement('div');
+                  wrapper.style.display = 'inline-block';
+                  wrapper.style.position = 'relative';
+                  wrapper.style.margin = '10px';
+          
+                  const imgEl = document.createElement('img');
+                  imgEl.src = `/uploads/${img}`;
+                  imgEl.style.width = '200px';
+                  imgEl.style.cursor = 'pointer';
+                  imgEl.style.border = '2px solid transparent';
+          
+                  imgEl.onclick = () => {
+                    if (selectedImages.has(img)) {
+                      selectedImages.delete(img);
+                      imgEl.style.border = '2px solid transparent';
+                    } else {
+                      selectedImages.add(img);
+                      imgEl.style.border = '2px solid red';
+                    }
+                  };
+          
+                  wrapper.appendChild(imgEl);
+                  container.appendChild(wrapper);
+                });
+          
+                // Create delete button
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Delete Selected';
+                deleteBtn.className = 'btn btn-danger';
+                deleteBtn.onclick = () => {
+                  selectedImages.forEach(filename => {
+                    fetch('/delete-image', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ filename })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                      console.log(data);
+                      location.reload(); // Refresh gallery
+                    });
+                  });
+                };
+          
+                document.body.appendChild(deleteBtn);
+              })
+              .catch(err => console.error('Failed to fetch images:', err));
+          </script>
+    </body>
+    <footer style="margin-bottom: 50px" class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+        <div class="col-md-4 d-flex align-items-center">
+          <a href="/" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1" aria-label="Bootstrap">
+            <svg class="bi" width="30" height="24" aria-hidden="true"><use xlink:href="#bootstrap"></use></svg>
+          </a>
+          <span class="mb-3 mb-md-0 text-body-secondary">© 2025 Gustavo Schuter, Inc</span>
+        </div>
+      <div class="b-example-divider"></div><div class="b-example-divider"></div></footer>
+</html>
+

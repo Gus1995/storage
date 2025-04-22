@@ -1,0 +1,37 @@
+AWS Global infrastructure 
+
+1 - High availability
+2 - in case something bad happens you have an oprating instance going on
+3 - building data centers in large groups called regions
+4 - Data an application lives and runs withing a region.
+5 - Latency is the ammount of time it takes to send/receive data 
+6 - Feature availability: each region may have its own set of features.
+7 - price may differ from one region to another. 
+8 - A Region consists of three or more Availability Zones.
+
+
+
+Key business factors: 
+1 - Compliace 
+2 - Proximity 
+3 - Feature availability
+4 - Pricing
+
+Edge locations
+
+- Caching copy
+- CDN = amazon cloud front (Amazon Route 53)
+- Service that helpdelivers data with low latency 
+- AWS Outposts = inside a datacenter building
+
+
+
+
+
+
+
+
+
+
+
+
