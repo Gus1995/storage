@@ -30,7 +30,7 @@
                     <a class="nav-link active" aria-current="page" href="/sharing">Sharing</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/deleted_items">Deleted</a>
+                    <a class="nav-link active" aria-current="page" href="/deleted_items">Trash</a>
                   </li>
                 </ul>
               </div>
@@ -40,6 +40,9 @@
 
           <h2>Image Gallery</h2>
           <div id="image-gallery"></div>
+
+          <button onclick="createFolder()">New Folder</button>
+
 
           <script>
             let selectedImages = new Set();
@@ -98,6 +101,20 @@
               })
               .catch(err => console.error('Failed to fetch images:', err));
           </script>
+
+          <script>
+            function createFolder() {
+              const folderName = prompt("Enter folder name:");
+              if (folderName) {
+                fetch('/create-folder', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ folderName })
+                }).then(res => res.text())
+                  .then(msg => alert(msg));
+              }
+            }
+            </script>
     </body>
     <footer style="margin-bottom: 50px" class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
         <div class="col-md-4 d-flex align-items-center">
